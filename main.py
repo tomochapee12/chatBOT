@@ -75,7 +75,7 @@ class ConversationManager:
             return model.count_tokens(history_content).total_tokens
         except Exception as e:
             logging.warning(f"トークン数の計算中にエラー: {e}")
-            return sum(len(content) for content in history_content) # 簡易的な代替計算
+            return sum(len(content) for content in history_content)
 
 def google_search(query: str, num_results: int = 3) -> str:
     url = f"https://www.googleapis.com/customsearch/v1?q={query}&key={GOOGLE_SEARCH_API_KEY}&cx={GOOGLE_SEARCH_ENGINE_ID}&num={num_results}&gl=jp&hl=ja"
@@ -140,7 +140,7 @@ async def on_message(message):
             full_history = short_term_history + discord_history
             
             chat_session = model.start_chat(history=full_history)
-            response = chat_session.send_message(user_input)
+            response = await chat_session.send_message_async(user_input)
             response_text = response.text.strip()
             
             conversation_manager.add_message(message.channel.id, "user", user_input)
